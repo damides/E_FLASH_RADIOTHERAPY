@@ -24,3 +24,6 @@ The application outputs a 3d dosemap txt file, however one can visualize the dis
 ## Validation
 ![Validation](/FLASH/VALIDATION/pdddata.png)
 There is also a python script to confront experimental PDD with simulation.
+![r100](/FLASH/VALIDATION/r100.png)
+![r80](/FLASH/VALIDATION/r80.png)
+![r50](/FLASH/VALIDATION/r50.png)
