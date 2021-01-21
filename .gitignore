@@ -4,3 +4,8 @@
 # Both the directory itself and its contents will be ignored.
 ./VALIDATION/
 ./FLASH/imagesforredame/
+build/
+compile.sh
+run.sh
+FLASH/Geant4
+results/

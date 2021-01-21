@@ -42,7 +42,8 @@
 #include "FLASHPhysicsList.hh"
 #include "FLASHPrimaryGeneratorAction.hh"
 #include "FLASHRunAction.hh"
-#include "Randomize.hh"  
+#include "Randomize.hh"
+#include "FLASHActionInitialization.hh"
 #include "G4RunManager.hh"
 #include "G4UImessenger.hh"
 #include "globals.hh"
@@ -54,17 +55,28 @@
 #include <ctime>
 #include "G4ScoringManager.hh"
 
+#ifdef G4MULTITHREADED
+#include "G4MTRunManager.hh"
+#else
+#include "G4RunManager.hh"
+#endif
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc ,char ** argv)
 {
   // Set the Random engine
-  CLHEP::HepRandom::setTheEngine(new CLHEP::RanecuEngine());
-
-//  G4int seed = time(NULL); 
- // CLHEP::HepRandom::setTheSeed(seed);
+  G4Random::setTheEngine(new CLHEP::RanecuEngine);
+  //G4Random::setTheSeed(123658745);
   
-  G4RunManager* runManager = new G4RunManager;
+  // Construct the default run manager
+  //
+  #ifdef G4MULTITHREADED
+    G4MTRunManager* runManager = new G4MTRunManager;
+  #else
+    G4RunManager* runManager = new G4RunManager;
+  #endif
+
 
   G4ScoringManager::GetScoringManager();
   // Scoring mesh
@@ -80,8 +92,14 @@ int main(int argc ,char ** argv)
   // Initialize the default FLASH geometry
   geometryController->SetGeometry("default");  
 
+  // Initialize the physic list
   runManager->SetUserInitialization(new FLASHPhysicsList());
 
+  // Initialize the user actions
+  runManager->SetUserInitialization(new FLASHActionInitialization());
+
+
+  /*
   // Initialize the primary particles
   FLASHPrimaryGeneratorAction *pPrimaryGenerator = new FLASHPrimaryGeneratorAction();
   runManager -> SetUserAction(pPrimaryGenerator);
@@ -96,6 +114,8 @@ int main(int argc ,char ** argv)
   FLASHSteppingAction* steppingAction = new FLASHSteppingAction(pRunAction); 
   runManager -> SetUserAction(steppingAction);    
 
+  */
+
   // Visualization manager
   G4VisManager* visManager = new G4VisExecutive;
   visManager -> Initialize();
@@ -103,13 +123,13 @@ int main(int argc ,char ** argv)
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
   if (argc!=1)   // batch mode
     {
+      
       G4String command = "/control/execute ";
       G4String fileName = argv[1];
       UImanager->ApplyCommand(command+fileName);    
     }
   else
     {  // interactive mode : define UI session
-       
       G4UIExecutive* ui = new G4UIExecutive(argc, argv);
   
       UImanager->ApplyCommand("/control/execute defaultMacro.mac"); 
