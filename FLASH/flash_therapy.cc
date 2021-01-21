@@ -58,11 +58,10 @@
 
 int main(int argc ,char ** argv)
 {
-  // Set the Random engine
-  CLHEP::HepRandom::setTheEngine(new CLHEP::RanecuEngine());
-
-//  G4int seed = time(NULL); 
- // CLHEP::HepRandom::setTheSeed(seed);
+  
+  // Choose the Random engine
+  G4Random::setTheEngine(new CLHEP::RanecuEngine);
+  G4Random::setTheSeed(123658745);
   
   G4RunManager* runManager = new G4RunManager;
 
