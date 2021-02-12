@@ -9,3 +9,4 @@ compile.sh
 run.sh
 FLASH/Geant4
 results/
+**/.vscode/
