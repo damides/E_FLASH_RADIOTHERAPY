@@ -74,7 +74,7 @@ int main(int argc ,char ** argv)
   runManager->SetNumberOfThreads(G4Threading::G4GetNumberOfCores());
 
   // Comment to unset the seed.
-  G4Random::setTheSeed(548235486);
+  // G4Random::setTheSeed(548235486);
 
 
   G4ScoringManager::GetScoringManager();
